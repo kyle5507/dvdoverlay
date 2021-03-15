@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <link rel="stylesheet" href="style/dvd.css">
+    <link href='https://fonts.googleapis.com/css?family=Permanent+Marker|Montez|Lobster|Josefin+Sans|Shadows+Into+Light|Pacifico|Amatic+SC:700|Orbitron:400,900|Rokkitt|Righteous|Dancing+Script:700|Bangers|Chewy|Sigmar+One|Architects+Daughter|Abril+Fatface|Covered+By+Your+Grace|Kaushan+Script|Gloria+Hallelujah|Satisfy|Lobster+Two:700|Comfortaa:700|Cinzel|Courgette'
+        rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+    <canvas id="cv"> </canvas>
+    <script>
+        const params = new URLSearchParams(window.location.search)
+
+        var x = 0;
+        var y = 10;
+        var fontsize = params.get("fontsize");
+        var col = getRandomColor();
+
+        xdir = 1;
+        ydir = 1;
+
+        var canvas = document.getElementById("cv");
+        var ctx = canvas.getContext("2d");
+        timer = setInterval(draw, 10)
+
+        var ysize = params.get("fontsize") - 1;
+        var font = params.get("font");
+        var txt = params.get("text");
+        var speed = params.get("speed");
+
+        function draw() {
+            canvas.height = window.innerHeight;
+            canvas.width = window.innerWidth;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = col;
+            ctx.font = fontsize + "px " + font;
+            var xsize = ctx.measureText(txt).width - 1;
+            ctx.textBaseline = "top";
+            ctx.fillText(txt, x, y)
+
+
+            if (x < 0) {
+                xdir = -xdir;
+                col = getRandomColor();
+                x = 0;
+            }
+            if (x + xsize >= canvas.width) {
+                xdir = -xdir;
+                col = getRandomColor();
+                x = canvas.width - xsize;
+            }
+
+            if (y < 0) {
+                ydir = -ydir;
+                col = getRandomColor();
+                y = 0;
+            }
+            if (y + ysize > canvas.height) {
+                ydir = -ydir;
+                col = getRandomColor();
+                y = canvas.height - ysize;
+            }
+
+            x += speed * xdir;
+            y += speed * ydir;
+        }
+
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+    </script>
+
+</body>
+
+</html>
